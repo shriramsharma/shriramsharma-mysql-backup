@@ -1,0 +1,31 @@
+version: "3.7"
+
+services:
+  mysql: 
+    image: mysql:5.7
+    init: true
+    ports:
+      - "$MYSQL_PORT:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+    volumes:
+      - ${MYSQL_DATA_DIRECTORY}:/docker-entrypoint-initdb.d
+  
+  mysql-backup:
+    build:
+      context: .
+      dockerfile: Dockerfile-mysql-backup
+      args:
+        cronInterval: ${MYSQL_BACKUP_CRON_INTERVAL}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_BACKUP_DIR_LOCATION: ${MYSQL_BACKUP_DIR_LOCATION}
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_CONTAINER_NAME: mysql
+    volumes:
+      - ${MYSQL_BACKUP_DIR_LOCATION}:/root/backup:rw
