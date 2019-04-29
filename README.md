@@ -5,7 +5,7 @@ Docker container which runs mysqldump automatically so that you don't loose your
 ## Usage
 
 * Copy `env-example` to `.env` and make changes as needed.
-* Run `docker-compose up --build mysql mysql-backup
+* Run `docker-compose up --build mysql mysql-backup`
 
 This will bring up `mysql` and and `mysql-backup` container. 
 
